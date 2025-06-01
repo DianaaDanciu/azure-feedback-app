@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head><title>Feedback</title></head>
+<body>
+  <h1>Submit Feedback</h1>
+  <form method="POST" enctype="multipart/form-data">
+    <input name="feedback" placeholder="Your feedback" required><br>
+    <input type="file" name="image"><br>
+    <button type="submit">Submit</button>
+  </form>
+  <h2>All Feedbacks</h2>
+  {% for item in feedbacks %}
+    <p>{{ item.text }}<br>
+       {% if item.image_url %}<img src="{{ item.image_url }}" width="100">{% endif %}
+    </p>
+  {% endfor %}
+</body>
+</html>
