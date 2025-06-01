@@ -2,6 +2,7 @@ import os
 from flask import Flask, request, render_template, redirect, url_for
 from azure.data.tables import TableServiceClient, TableEntity
 from azure.storage.blob import BlobServiceClient
+from datetime import datetime
 import uuid
 
 app = Flask(__name__)
@@ -32,12 +33,13 @@ def index():
             "PartitionKey": "feedback",
             "RowKey": row_key,
             "text": text,
-            "image_url": image_url
+            "image_url": image_url,
+            "date": datetime.utcnow().isoformat()
         }
         table_client.create_entity(entity)
 
         return redirect(url_for("index"))
 
     feedbacks = table_client.query_entities("PartitionKey eq 'feedback'")
-    sorted_feedbacks = sorted(feedbacks, key=lambda x: x["RowKey"], reverse=True)
+    sorted_feedbacks = sorted(feedbacks, key=lambda x: x["date"], reverse=True)
     return render_template("index.html", feedbacks=sorted_feedbacks)
