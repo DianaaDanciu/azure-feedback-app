@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for
 from azure.data.tables import TableServiceClient, TableEntity
 from azure.storage.blob import BlobServiceClient
 import uuid
@@ -35,6 +35,8 @@ def index():
             "image_url": image_url
         }
         table_client.create_entity(entity)
+
+        return redirect(url_for("index"))
 
     feedbacks = table_client.query_entities("PartitionKey eq 'feedback'")
     sorted_feedbacks = sorted(feedbacks, key=lambda x: x["RowKey"], reverse=True)
