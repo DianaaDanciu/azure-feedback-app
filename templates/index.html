@@ -1,18 +1,317 @@
-<!doctype html>
-<html>
-<head><title>Feedback</title></head>
-<body>
-  <h1>Submit Feedback</h1>
-  <form method="POST" enctype="multipart/form-data">
-    <input name="feedback" placeholder="Your feedback" required><br>
-    <input type="file" name="image"><br>
-    <button type="submit">Submit</button>
-  </form>
-  <h2>All Feedbacks</h2>
-  {% for item in feedbacks %}
-    <p>{{ item.text }}<br>
-       {% if item.image_url %}<img src="{{ item.image_url }}" width="100">{% endif %}
-    </p>
-  {% endfor %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Feedback Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+<!-- Header -->
+<header class="bg-white shadow-lg border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-6">
+            <div class="flex items-center">
+                <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                    <svg
+                            class="w-6 h-6 text-white"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                    >
+                        <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                        ></path>
+                    </svg>
+                </div>
+                <h1 class="ml-3 text-2xl font-bold text-gray-900">Feedback Hub</h1>
+            </div>
+            <div class="text-sm text-gray-500">
+                Share your thoughts with us
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Feedback Form -->
+        <div>
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <div class="flex items-center mb-6">
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <svg
+                                class="w-5 h-5 text-blue-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                        >
+                            <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                            ></path>
+                        </svg>
+                    </div>
+                    <h2 class="ml-3 text-xl font-semibold text-gray-900">
+                        Submit Feedback
+                    </h2>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                    <div>
+                        <label for="feedback" class="block text-sm font-medium text-gray-700 mb-2">
+                            Your Feedback
+                        </label>
+                        <textarea
+                                name="feedback"
+                                id="feedback"
+                                rows="4"
+                                required
+                                placeholder="Share your thoughts, suggestions, or report issues..."
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                        ></textarea>
+                    </div>
+
+                    <div>
+                        <label
+                                for="image"
+                                class="block text-sm font-medium text-gray-700 mb-2"
+                        >
+                            Attach Image (Optional)
+                        </label>
+                        <div
+                                id="uploadArea"
+                                class="relative border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-blue-400"
+                        >
+                            <input
+                                    type="file"
+                                    name="image"
+                                    id="image"
+                                    accept="image/*"
+                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            />
+                            <div id="uploadPlaceholder" class="text-center">
+                                <svg
+                                        class="mx-auto h-12 w-12 text-gray-400"
+                                        stroke="currentColor"
+                                        fill="none"
+                                        viewBox="0 0 48 48"
+                                >
+                                    <path
+                                            d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"></path>
+                                </svg>
+                                <div class="mt-2">
+                                    <p class="text-sm text-gray-600">
+                        <span class="font-medium text-blue-600 hover:text-blue-500"
+                        >Click to upload</span
+                        >
+                                        or drag and drop
+                                    </p>
+                                    <p class="text-xs text-gray-500">
+                                        PNG, JPG, GIF up to 10MB
+                                    </p>
+                                </div>
+                            </div>
+                            <div id="imagePreview" class="hidden text-center">
+                                <img
+                                        id="previewImage"
+                                        src=""
+                                        alt="Preview"
+                                        class="max-w-full max-h-48 object-contain rounded-lg mx-auto"
+                                />
+                                <div class="mt-2">
+                                    <p class="text-sm text-gray-600">
+                                        <span class="font-medium text-green-600">Image selected</span>
+                                    </p>
+                                    <p class="text-xs text-gray-500">
+                                        Click to change image
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button
+                            type="submit"
+                            class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-lg"
+                    >
+                        Submit Feedback
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Feedback List -->
+        <div>
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div
+                                    class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center"
+                            >
+                                <svg
+                                        class="w-5 h-5 text-green-600"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                >
+                                    <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                    ></path>
+                                </svg>
+                            </div>
+                            <h2 class="ml-3 text-xl font-semibold text-gray-900">
+                                Recent Feedback
+                            </h2>
+                        </div>
+                        <span
+                                class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full"
+                        >
+                  {{ feedbacks|length }} total
+                </span>
+                    </div>
+                </div>
+
+                <div class="max-h-96 overflow-y-auto">
+                    {% if feedbacks %} {% for item in feedbacks %}
+                        <div
+                                class="p-6 border-b border-gray-100 last:border-b-0 hover:bg-gray-50"
+                        >
+                            <div class="flex items-start space-x-4">
+                                <div
+                                        class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center flex-shrink-0"
+                                >
+                                    <svg
+                                            class="w-5 h-5 text-white"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                        ></path>
+                                    </svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-gray-900 text-sm leading-relaxed mb-3">
+                                        {{ item.text }}
+                                    </p>
+                                    {% if item.image_url %}
+                                        <div class="mb-3">
+                                            <img
+                                                    src="{{ item.image_url }}"
+                                                    alt="Feedback attachment"
+                                                    class="max-w-full h-32 object-cover rounded-lg border border-gray-200 shadow-sm hover:shadow-md cursor-pointer"
+                                                    onclick="openImageModal('{{ item.image_url }}')"
+                                            />
+                                        </div>
+                                    {% endif %}
+                                    <div class="flex items-center text-xs text-gray-500">
+                                        <svg
+                                                class="w-4 h-4 mr-1"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                            ></path>
+                                        </svg>
+                                        {{ item.date[:19] | replace('T', ' ') }} UTC
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %} {% else %}
+                        <div class="p-12 text-center">
+                            <svg
+                                    class="mx-auto h-12 w-12 text-gray-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                            >
+                                <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                                ></path>
+                            </svg>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">
+                                No feedback yet
+                            </h3>
+                            <p class="mt-1 text-sm text-gray-500">
+                                Be the first to share your thoughts!
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50"
+     onclick="closeImageModal()">
+    <div class="max-w-4xl max-h-full p-4">
+        <img
+                id="modalImage"
+                src=""
+                alt="Full size image"
+                class="max-w-full max-h-full object-contain rounded-lg"
+        />
+    </div>
+</div>
+
+<script>
+    function openImageModal(imageUrl) {
+        document.getElementById("modalImage").src = imageUrl;
+        document.getElementById("imageModal").classList.remove("hidden");
+        document.getElementById("imageModal").classList.add("flex");
+    }
+
+    function closeImageModal() {
+        document.getElementById("imageModal").classList.add("hidden");
+        document.getElementById("imageModal").classList.remove("flex");
+    }
+
+    document.getElementById("image").addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        const uploadPlaceholder = document.getElementById("uploadPlaceholder");
+        const imagePreview = document.getElementById("imagePreview");
+        const previewImage = document.getElementById("previewImage");
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                previewImage.src = e.target.result;
+                uploadPlaceholder.classList.add("hidden");
+                imagePreview.classList.remove("hidden");
+            };
+            reader.readAsDataURL(file);
+        } else {
+            uploadPlaceholder.classList.remove("hidden");
+            imagePreview.classList.add("hidden");
+        }
+    });
+</script>
 </body>
 </html>
